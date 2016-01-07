@@ -86,7 +86,7 @@ void RestoreDefaults() {
   RHValue_Low = 40.00;
   RHValue_High = 45.00;
 
-//TDS1
+  //TDS1
   TDS1_Status = "OK";
   TDS1Value_Low = 500.0;
   TDS1Value_High = 800.0;

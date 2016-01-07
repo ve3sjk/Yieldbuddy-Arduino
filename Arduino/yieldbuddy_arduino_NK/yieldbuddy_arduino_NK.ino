@@ -162,6 +162,7 @@ float Dehumidifier_OFF = 40.00;
 String TDS1_Status = "OK";
 float TDS1Value_Low = 500.0;
 float TDS1Value_High = 800.0;
+
 //Accessory ON/OFF Values
 float NutePump1_ON = 500.0;
 float NutePump1_OFF = 800.0;
@@ -171,6 +172,7 @@ boolean MixPump1_Enabled = true;
 String TDS2_Status = "OK";
 float TDS2Value_Low = 500.0;
 float TDS2Value_High = 800.0;
+
 //Accessory ON/OFF Values
 float NutePump2_ON = 500.0;
 float NutePump2_OFF = 800.0;
@@ -180,6 +182,7 @@ boolean MixPump2_Enabled = true;
 String CO2_Status = "OK";
 float CO2Value_Low = 60.00;
 float CO2Value_High= 75.00;
+
 //Accessory ON/OFF Values
 float CO2_ON = 40.00;
 float CO2_OFF = 60.00 ;
