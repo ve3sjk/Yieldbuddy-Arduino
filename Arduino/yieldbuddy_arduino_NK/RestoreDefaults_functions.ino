@@ -1,8 +1,8 @@
 /*
-/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- /!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!
- /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- */
+  /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  /!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!RESTORE DEFAULTS!!
+  /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
 void RestoreDefaults() {
 
   //Temporary placeholders for Time Settings Screen
@@ -57,6 +57,12 @@ void RestoreDefaults() {
   LightRawValue = 0;
   WaterRawValue = 0;
   
+  // added ultrasonic tank sensors
+  Tank1RawValue = 0;
+  Tank2RawValue = 0;
+  Tank3RawValue = 0;
+  Tank4RawValue = 0;
+  TankTotalRawValue = 0;
 
   //Values the humans see
   pH1Value = 0;
@@ -68,62 +74,124 @@ void RestoreDefaults() {
   CO2Value = 0;
   LightValue = 0;
   WaterValue = 0;
+  
+  // added ultrasonic tank sensors
+  Tank1Value = 0;
+  Tank2Value = 0;
+  Tank3Value = 0;
+  Tank4Value = 0;
+  TankTotalValue = 0;
 
-  //Status Indicator Values
+  // STATUS INDICATOR VALUES
+
+  //Tank 1
+  Tank1_Status = "OK";
+  Tank1Value_Low = 50.00;
+  Tank1Value_High = 200.00;
+  //Accessory ON/OFF Values
+  Tank1Pump_ON = 200.00;
+  Tank1Pump_OFF = 190.00;
+  Tank1MixPump_Enabled = true;
+
+  //Tank 2
+  Tank2_Status = "OK";
+  Tank2Value_Low = 50.00;
+  Tank2Value_High = 200.00;
+  //Accessory ON/OFF Values
+  Tank2Pump_ON = 200.00;
+  Tank2Pump_OFF = 190.00;
+  Tank2MixPump_Enabled = true;
+
+  //Tank 3
+  Tank3_Status = "OK";
+  Tank3Value_Low = 50.00;
+  Tank3Value_High = 200.00;
+  //Accessory ON/OFF Values
+  Tank3Pump_ON = 200.00;
+  Tank3Pump_OFF = 190.00;
+  Tank3MixPump_Enabled = true;
+
+  //Tank 4
+  Tank4_Status = "OK";
+  Tank4Value_Low = 50.00;
+  Tank4Value_High = 200.00;
+  //Accessory ON/OFF Values
+  Tank4Pump_ON = 200.00;
+  Tank4Pump_OFF = 190.00;
+  Tank4MixPump_Enabled = true;
+
+  //Tank Total
+  TankTotal_Status = "OK";
+  TankTotalValue_Low = 200.00;
+  TankTotalValue_High = 1200.00;
+
+
+  //PH1
   pH1_Status = "OK";
   pH1Value_Low = 5.80;
   pH1Value_High = 6.20;
-
+  
+  //PH2
   pH2_Status = "OK";
   pH2Value_Low = 5.80;
   pH2Value_High = 6.2;
 
+  //TEMP
   Temp_Status = "OK";
   TempValue_Low = 21.00;
   TempValue_High = 26.00;
-
-  RH_Status = "OK";
-  RHValue_Low = 40.00;
-  RHValue_High = 45.00;
-
-  //TDS1
-  TDS1_Status = "OK";
-  TDS1Value_Low = 500.0;
-  TDS1Value_High = 800.0;
-
-  //TDS2
-  TDS2_Status = "OK";
-  TDS2Value_Low = 500.0;
-  TDS2Value_High = 800.0;
-  
-  //Accessory ON/OFF Values
-  NutePump2_ON = 500.0;
-  NutePump2_OFF = 800.0;
-  MixPump2_Enabled = false;
-
-  CO2_Status = "OK";
-  CO2Value_Low = 60.00;
-  CO2Value_High= 75.00;
-
-  Light_Status = "OK";
-  LightValue_Low = 20.00;
-  LightValue_High = 95.00;
-
   //Accessory ON/OFF Values
   Heater_ON = 21.00;
   Heater_OFF = 23.88;
   AC_ON = 27.00;
   AC_OFF = 23.88;
-  Humidifier_ON = 40.00;
-  Humidifier_OFF = 60.00;
+
+  
+  //HUMIDITY
+  RH_Status = "OK";
+  RHValue_Low = 30.00;
+  RHValue_High = 45.00;
+  //Accessory ON/OFF Values
+  Humidifier_ON = 30.00;
+  Humidifier_OFF = 33.00;
   Dehumidifier_ON = 45.00;
   Dehumidifier_OFF = 42.50;
-  NutePump1_ON = 500.0;
-  NutePump1_OFF = 800.0;
+
+
+  //TDS1
+  TDS1_Status = "OK";
+  TDS1Value_Low = 1;
+  TDS1Value_High = 16;
+  //Accessory ON/OFF Values
+  NutePump1_ON = 1;
+  NutePump1_OFF = 16;
   MixPump1_Enabled = false;
+
+
+  //TDS2
+  TDS2_Status = "OK";
+  TDS2Value_Low = 1;
+  TDS2Value_High = 16;
+  //Accessory ON/OFF Values
+  NutePump2_ON = 1;
+  NutePump2_OFF = 16;
+  MixPump2_Enabled = false;
+  
+  //Co2
+  CO2_Status = "OK";
+  CO2Value_Low = 40.00;
+  CO2Value_High = 55.00;
+  //Accessory ON/OFF Values
   CO2_ON = 40.00;
-  CO2_OFF = 60.00 ;
+  CO2_OFF = 45.00 ;
   CO2_Enabled = false;
+    
+  //LIGHT
+  Light_Status = "OK";
+  LightValue_Low = 5.00;
+  LightValue_High = 25000;
+
+
 
 
   //Turn all relays off and set to manual mode by default
@@ -154,118 +222,172 @@ void RestoreDefaults() {
   EEPROM.write(12, 0);
   EEPROM.write(13, 0);
 
-  int Relay1_isAuto = 1;  //Water Pump 1
-  int Relay2_isAuto = 1;  //Water Supply
-  int Relay3_isAuto = 1;  //pH down
-  int Relay4_isAuto = 1;  //Nute 1
-  int Relay5_isAuto = 1;  //Nute 2
-  int Relay6_isAuto = 1;  //Dehumidifier
-  int Relay7_isAuto = 1;  //AC
-  int Relay8_isAuto = 1;  //Light  
+  int Relay1_isAuto = 0;  //Water Pump 1
+  int Relay2_isAuto = 0;  //Water Supply
+  int Relay3_isAuto = 0;  //pH down
+  int Relay4_isAuto = 0;  //Nute 1
+  int Relay5_isAuto = 0;  //Nute 2
+  int Relay6_isAuto = 0;  //Dehumidifier
+  int Relay7_isAuto = 0;  //AC
+  int Relay8_isAuto = 0;  //Light
 
   //Relay isAuto
-  EEPROM.write(211, Relay1_isAuto);
-  EEPROM.write(212, Relay2_isAuto);
-  EEPROM.write(213, Relay3_isAuto);
-  EEPROM.write(214, Relay4_isAuto);
-  EEPROM.write(215, Relay5_isAuto);
-  EEPROM.write(216, Relay6_isAuto);
-  EEPROM.write(217, Relay7_isAuto);
-  EEPROM.write(218, Relay8_isAuto);
+  EEPROM.write(22, Relay1_isAuto);
+  EEPROM.write(23, Relay2_isAuto);
+  EEPROM.write(24, Relay3_isAuto);
+  EEPROM.write(25, Relay4_isAuto);
+  EEPROM.write(26, Relay5_isAuto);
+  EEPROM.write(27, Relay6_isAuto);
+  EEPROM.write(28, Relay7_isAuto);
+  EEPROM.write(29, Relay8_isAuto);
 
 
   //pH
-  eepromWriteFloat(78,pH1Value_Low);
-  eepromWriteFloat(82,pH1Value_High);
-  eepromWriteFloat(180,pH2Value_Low);
-  eepromWriteFloat(184,pH2Value_High);
+  eepromWriteFloat(113, pH1Value_Low);
+  eepromWriteFloat(117, pH1Value_High);
+  eepromWriteFloat(121, pH2Value_Low);
+  eepromWriteFloat(125, pH2Value_High);
 
   //Temp
-  eepromWriteFloat(86,TempValue_Low);
-  eepromWriteFloat(90,TempValue_High);
-  eepromWriteFloat(94,Heater_ON);
-  eepromWriteFloat(98,Heater_OFF);
-  eepromWriteFloat(102,AC_ON);
-  eepromWriteFloat(106,AC_OFF);
+  eepromWriteFloat(129, TempValue_Low);
+  eepromWriteFloat(133, TempValue_High);
+  eepromWriteFloat(137, Heater_ON);
+  eepromWriteFloat(141, Heater_OFF);
+  eepromWriteFloat(145, AC_ON);
+  eepromWriteFloat(149, AC_OFF);
 
   //RH
-  eepromWriteFloat(110,RHValue_Low);
-  eepromWriteFloat(114,RHValue_High);
-  eepromWriteFloat(118,Humidifier_ON);
-  eepromWriteFloat(122,Humidifier_OFF);
-  eepromWriteFloat(126,Dehumidifier_ON);
-  eepromWriteFloat(130,Dehumidifier_OFF);
+  eepromWriteFloat(153, RHValue_Low);
+  eepromWriteFloat(157, RHValue_High);
+  eepromWriteFloat(161, Humidifier_ON);
+  eepromWriteFloat(165, Humidifier_OFF);
+  eepromWriteFloat(169, Dehumidifier_ON);
+  eepromWriteFloat(173, Dehumidifier_OFF);
 
   //TDS1
-  eepromWriteFloat(134,TDS1Value_Low);
-  eepromWriteFloat(139,TDS1Value_High);
-  eepromWriteFloat(144,NutePump1_ON);
-  eepromWriteFloat(149,NutePump1_OFF);
+  eepromWriteFloat(177, TDS1Value_Low);
+  eepromWriteFloat(181, TDS1Value_High);
+  eepromWriteFloat(185, NutePump1_ON);
+  eepromWriteFloat(189, NutePump1_OFF);
   if (MixPump1_Enabled == true) {
-    EEPROM.write(154,1);
-  } 
+    EEPROM.write(193, 1);
+  }
   else {
-    EEPROM.write(154,0);
+    EEPROM.write(193, 0);
   }
 
   //TDS2
-  eepromWriteFloat(188,TDS2Value_Low);
-  eepromWriteFloat(193,TDS2Value_High);
-  eepromWriteFloat(198,NutePump2_ON);
-  eepromWriteFloat(203,NutePump2_OFF);
+  eepromWriteFloat(194, TDS2Value_Low);
+  eepromWriteFloat(198, TDS2Value_High);
+  eepromWriteFloat(202, NutePump2_ON);
+  eepromWriteFloat(206, NutePump2_OFF);
   if (MixPump2_Enabled == true) {
-    EEPROM.write(208,1);
-  } 
+    EEPROM.write(210, 1);
+  }
   else {
-    EEPROM.write(208,0);
+    EEPROM.write(210, 0);
   }
 
   //CO2
-  eepromWriteFloat(155,CO2Value_Low);
-  eepromWriteFloat(159,CO2Value_High);
-  eepromWriteFloat(163,CO2_ON);
-  eepromWriteFloat(167,CO2_OFF);
+  eepromWriteFloat(211, CO2Value_Low);
+  eepromWriteFloat(215, CO2Value_High);
+  eepromWriteFloat(219, CO2_ON);
+  eepromWriteFloat(223, CO2_OFF);
   if (CO2_Enabled == true) {
-    EEPROM.write(171,1);
-  } 
-  else {
-    EEPROM.write(171,0);
+    EEPROM.write(227, 1);
   }
-  //Light
-  eepromWriteFloat(172,LightValue_Low);
-  eepromWriteFloat(176,LightValue_High);
+  else {
+    EEPROM.write(227, 0);
+  }
 
-  EEPROM.write(76, Light_ON_hour);
-  EEPROM.write(209, Light_ON_min);
-  EEPROM.write(77, Light_OFF_hour);
-  EEPROM.write(210, Light_OFF_min);
+  
+  //Light
+  eepromWriteFloat(228, LightValue_Low);
+  eepromWriteFloat(232, LightValue_High);
+  EEPROM.write(93, Light_ON_hour);
+  EEPROM.write(94, Light_OFF_hour);
+  EEPROM.write(95, Light_ON_min);
+  EEPROM.write(96, Light_OFF_min);
 
   //Pump
-  EEPROM.write(21,Pump_start_hour);
-  EEPROM.write(22,Pump_start_min);
-  EEPROM.write(23,Pump_every_hours);
-  EEPROM.write(24,Pump_every_mins);
-  EEPROM.write(25,Pump_for);
-  EEPROM.write(26,Pump_times);
+  EEPROM.write(38, Pump_start_hour);
+  EEPROM.write(39, Pump_start_min);
+  EEPROM.write(40, Pump_every_hours);
+  EEPROM.write(41, Pump_every_mins);
+  EEPROM.write(42, Pump_for);
+  EEPROM.write(43, Pump_times);
 
   int i = 0;
-  for(i = 0; i < tmp_Pump_times; i++){
-    Pump_hour_array[i]=  tmp_Pump_hour_array[i];
+  for (i = 0; i < tmp_Pump_times; i++) {
+    Pump_hour_array[i] =  tmp_Pump_hour_array[i];
     Pump_min_array[i] = tmp_Pump_min_array[i];
     Pump_isAM_array[i] = tmp_Pump_isAM_array[i];
-    EEPROM.write((i+27),Pump_hour_array[i]);
-    EEPROM.write((i+43),Pump_min_array[i]);
-    EEPROM.write((i+59),Pump_isAM_array[i]);
+    EEPROM.write((i + 44), Pump_hour_array[i]);
+    EEPROM.write((i + 60), Pump_min_array[i]);
+    EEPROM.write((i + 76), Pump_isAM_array[i]);
   }
 
+  // added ultrasonic tank sensors
+  //Tank 1
+  eepromWriteFloat(236, Tank1Value_Low);
+  eepromWriteFloat(240, Tank1Value_High);
+  eepromWriteFloat(244, Tank1Pump_ON);
+  eepromWriteFloat(248, Tank1Pump_OFF);
+  if (Tank1MixPump_Enabled == true) {
+    EEPROM.write(252, 1);
+  }
+  else {
+    EEPROM.write(252, 0);
+  }
+
+  //Tank 2
+  eepromWriteFloat(253, Tank2Value_Low);
+  eepromWriteFloat(257, Tank2Value_High);
+  eepromWriteFloat(261, Tank2Pump_ON);
+  eepromWriteFloat(265, Tank2Pump_OFF);
+  if (Tank2MixPump_Enabled == true) {
+    EEPROM.write(269, 1);
+  }
+  else {
+    EEPROM.write(269, 0);
+  }
+
+  //Tank 3
+  eepromWriteFloat(270, Tank3Value_Low);
+  eepromWriteFloat(274, Tank3Value_High);
+  eepromWriteFloat(278, Tank3Pump_ON);
+  eepromWriteFloat(282, Tank3Pump_OFF);
+  if (Tank3MixPump_Enabled == true) {
+    EEPROM.write(286, 1);
+  }
+  else {
+    EEPROM.write(286, 0);
+  }
+
+  //Tank 4
+  eepromWriteFloat(287, Tank4Value_Low);
+  eepromWriteFloat(291, Tank4Value_High);
+  eepromWriteFloat(295, Tank4Pump_ON);
+  eepromWriteFloat(299, Tank4Pump_OFF);
+  if (Tank3MixPump_Enabled == true) {
+    EEPROM.write(303, 1);
+  }
+  else {
+    EEPROM.write(303, 0);
+  }
+
+  //Tank Total
+  eepromWriteFloat(304, TankTotalValue_Low);
+  eepromWriteFloat(308, TankTotalValue_High);    
+
   //Save Time Settings
-  EEPROM.write(0,tmp_hour);
-  EEPROM.write(1,tmp_minute);
-  EEPROM.write(2,tmp_second);
-  EEPROM.write(3,tmp_day);
-  EEPROM.write(4,tmp_month);
-  EEPROM.write(5,tmp_year);
-  setTime(tmp_hour,tmp_minute,tmp_second,tmp_day,tmp_month,tmp_year);
+  EEPROM.write(0, tmp_hour);
+  EEPROM.write(1, tmp_minute);
+  EEPROM.write(2, tmp_second);
+  EEPROM.write(3, tmp_day);
+  EEPROM.write(4, tmp_month);
+  EEPROM.write(5, tmp_year);
+  setTime(tmp_hour, tmp_minute, tmp_second, tmp_day, tmp_month, tmp_year);
   setSyncProvider(RTC.get);
 
 }

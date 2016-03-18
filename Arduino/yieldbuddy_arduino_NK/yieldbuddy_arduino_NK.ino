@@ -3,6 +3,7 @@
 #include <DHT.h>
 #include <EEPROM.h>
 #include <Wire.h>
+#include <OneWire.h>
 #include <DS1307RTC.h>
 #include <avr/pgmspace.h>
 #include "Arduino.h"
@@ -27,6 +28,16 @@ char TDS1_char[11] = "0000.0ppm";
 char TDS2_char[11] = "0000.0ppm";
 char CO2_char[8] = "00.00%";
 char Light_char[7] = "00.00%";
+
+// added dallas temp sensors
+char temp_s[8]="-000.0\0"; //dallas temp
+
+//added ulrasonic tank sensors
+char tank_1_char[8] = "0000.00";
+char tank_2_char[8] = "0000.00";
+char tank_3_char[8] = "0000.00";
+char tank_4_char[8] = "0000.00";
+char tank_total_char[8] = "0000.00";
 
 //Temporary placeholders for Time Settings Screen
 int tmp_month;
@@ -97,12 +108,19 @@ int pumpActivityCounter = 10;
 int pH1RawValue = 0;
 int pH2RawValue = 0;
 int TempRawValue = 0;
-int WaterRawValue = 0;
 int RHRawValue = 0;
 int TDS1RawValue = 0;
 int TDS2RawValue = 0;
 int CO2RawValue = 0;
 int LightRawValue = 0;
+int WaterRawValue = 0;
+
+// added ultrasonic tank sensors
+int Tank1RawValue = 0;
+int Tank2RawValue = 0;
+int Tank3RawValue = 0;
+int Tank4RawValue = 0;
+int TankTotalRawValue = 0;
 
 //Values the humans see (after it has been calculated using raw values above ^^^ and their respected formulas)
 float pH1Value = 0;
@@ -114,6 +132,54 @@ float TDS1Value = 0;
 float TDS2Value = 0;
 float CO2Value = 0;
 float LightValue = 0;
+
+// added ultrasonic tank sensors
+float Tank1Value = 0;
+float Tank2Value = 0;
+float Tank3Value = 0;
+float Tank4Value = 0;
+float TankTotalValue = 0;
+
+//Tank 1
+String Tank1_Status = "OK";
+float Tank1Value_Low = 50.00;
+float Tank1Value_High = 200.00;
+//Accessory ON/OFF Values
+float Tank1Pump_ON = 200.00;
+float Tank1Pump_OFF = 190.00;
+boolean Tank1MixPump_Enabled = true;
+
+//Tank 2
+String Tank2_Status = "OK";
+float Tank2Value_Low = 50.00;
+float Tank2Value_High = 200.00;
+//Accessory ON/OFF Values
+float Tank2Pump_ON = 200.00;
+float Tank2Pump_OFF = 190.00;
+boolean Tank2MixPump_Enabled = true;
+
+//Tank 3
+String Tank3_Status = "OK";
+float Tank3Value_Low = 50.00;
+float Tank3Value_High = 200.00;
+//Accessory ON/OFF Values
+float Tank3Pump_ON = 200.00;
+float Tank3Pump_OFF = 190.00;
+boolean Tank3MixPump_Enabled = true;
+
+//Tank 4
+String Tank4_Status = "OK";
+float Tank4Value_Low = 50.00;
+float Tank4Value_High = 200.00;
+//Accessory ON/OFF Values
+float Tank4Pump_ON = 200.00;
+float Tank4Pump_OFF = 190.00;
+boolean Tank4MixPump_Enabled = true;
+
+//Tank Total
+String TankTotal_Status = "OK";
+float TankTotalValue_Low = 200.00;
+float TankTotalValue_High = 1200.00;
 
 
 //PH
@@ -147,6 +213,11 @@ float AC_OFF = 23.88;
 //Level
 String Level_Status = "Unknown";
 int LevelFull = 0; //0 = empty, 1 = full, 2 = unknown
+
+//Water level float
+float WaterLevel_Low = 5.00;
+float WaterLevel_High = 95.00;
+
 
 //Humidty(RH)
 String RH_Status = "OK";
@@ -193,9 +264,28 @@ String Light_Status = "OK";
 float LightValue_Low = 20.00;
 float LightValue_High = 95.00;
 
-//Water level float
-float WaterLevel_Low = 5.00;
-float WaterLevel_High = 95.00;
+  int BH1750_address = 0x23; // i2c Addresse
+  byte buff[2];
+
+  void BH1750_Init(int address){
+  
+  Wire.beginTransmission(address);
+  Wire.write(0x10); // 1 [lux] aufloesung
+  Wire.endTransmission();
+  }
+
+  byte BH1750_Read(int address){
+  
+  byte i=0;
+  Wire.beginTransmission(address);
+  Wire.requestFrom(address, 2);
+  while(Wire.available()){
+    buff[i] = Wire.read(); 
+    i++;
+  }
+  Wire.endTransmission();  
+  return i;
+}
 
 
 
@@ -204,30 +294,46 @@ float WaterLevel_High = 95.00;
  /!!PIN DEFINITIONS!!PIN DEFINITIONS!!PIN DEFINITIONS!!PIN DEFINITIONS!!PIN DEFINITIONS!!PIN DEFINITIONS!!
  /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
-int pH1Pin = A3;
-int pH2Pin = A4;
-int TempPin = A0;
 
+// Dallas Temperature
+#define ONE_WIRE_PIN 8
+byte TmpE1Add[]={0x28, 0xFF, 0x20, 0x1D, 0x71, 0x15, 0x02, 0xFE};
+OneWire  ds(ONE_WIRE_PIN);
 
 //RH
-#define DHTPIN 28
-#define DHTTYPE DHT11   // DHT 11
-DHT dht(28, DHT11);
+#define DHTPIN 11
+#define DHTTYPE DHT22   // DHT 11
+//#define DHTTYPE DHT11   // DHT 11
+DHT dht(DHTPIN, DHTTYPE);
 
-int TDS1Pin = A5;
-int TDS2Pin = A6;
+
+int TempPin = A0;
 int CO2Pin = A1;
 int LightPin = A2;
+int pH1Pin = A3;
+int pH2Pin = A4;
+int TDS1Pin = A5;
+int TDS2Pin = A6;
 int WaterPin = A7;
 
-int Relay1_Pin = 27;  //Water Pump
-int Relay2_Pin = 26;  //Water Supply
-int Relay3_Pin = 25;  //pH down
-int Relay4_Pin = 24;  //Nute 1
-int Relay5_Pin = 23;  //Nute 2
-int Relay6_Pin = 22;  //Dehumidifier
-int Relay7_Pin = 29;  //AC
-int Relay8_Pin = 30;  //Light
+//added utlrasonic tank sensors
+int Tank1TrigPin = A8;
+int Tank1EchoPin = A9;
+int Tank2TrigPin = A10;
+int Tank2EchoPin = A11;
+int Tank3TrigPin = A12;
+int Tank3EchoPin = A13;
+int Tank4TrigPin = A14;
+int Tank4EchoPin = A15;
+
+int Relay1_Pin = 22;  //Water Pump
+int Relay2_Pin = 23;  //Water Supply
+int Relay3_Pin = 24;  //pH down
+int Relay4_Pin = 25;  //Nute 1
+int Relay5_Pin = 26;  //Nute 2
+int Relay6_Pin = 27;  //Dehumidifier
+int Relay7_Pin = 28;  //AC
+int Relay8_Pin = 29;  //Light
 
 int Relay1_State = 0;
 int Relay2_State = 0;
@@ -263,8 +369,8 @@ void setup()
   pinMode(Relay7_Pin, OUTPUT);
   pinMode(Relay8_Pin, OUTPUT);
 
-  //COMMENT OUT THIS SECTION ON FIRST START UP!!-----------------------------------
-  //EEPROM TIME
+//  //COMMENT OUT THIS SECTION ON FIRST START UP!!-----------------------------------
+//  //EEPROM TIME
     int eeprom_hr = EEPROM.read(0);
     int eeprom_min = EEPROM.read(1);
     int eeprom_sec = EEPROM.read(2);
@@ -282,14 +388,14 @@ void setup()
   Relay7_State = 0; //EEPROM.read(12);    //AC
   Relay8_State = 0; //EEPROM.read(13);    //Light
 
-  Relay1_isAuto = EEPROM.read(211);  //Water Pump 1
-  Relay2_isAuto = EEPROM.read(212);  //Water Pump 2
-  Relay3_isAuto = EEPROM.read(213);  //ph down
-  Relay4_isAuto = EEPROM.read(214);  //nute 1
-  Relay5_isAuto = EEPROM.read(215);   //nute 2
-  Relay6_isAuto = EEPROM.read(216);  //dehumid  
-  Relay7_isAuto = EEPROM.read(217);  //AC
-  Relay8_isAuto = EEPROM.read(218);  //Light
+  Relay1_isAuto = EEPROM.read(22);  //Water Pump 1
+  Relay2_isAuto = EEPROM.read(23);  //Water Pump 2
+  Relay3_isAuto = EEPROM.read(24);  //ph down
+  Relay4_isAuto = EEPROM.read(25);  //nute 1
+  Relay5_isAuto = EEPROM.read(26);   //nute 2
+  Relay6_isAuto = EEPROM.read(27);  //dehumid  
+  Relay7_isAuto = EEPROM.read(28);  //AC
+  Relay8_isAuto = EEPROM.read(29);  //Light
 
   //Safe-Route ---> Disregard last known states and turn all relays off (auto will take over):
     turnRelay(1, 0);
@@ -301,91 +407,58 @@ void setup()
     turnRelay(7, 0);
     turnRelay(8, 0);
     
-  //If Relay is not set for automatic mode, then resume last known state 
-  //(ie. Set relay as it was before a power failure?)
-  //  if (Relay1_State == 0 && Relay1_isAuto == 0) {
-  //   turnRelay(1, 0); 
-  //  } else if (Relay2_State == 1 && Relay2_isAuto == 0){
-  //   turnRelay(1, 1);
-  //  }
-  //  if (Relay2_State == 0 && Relay2_isAuto == 0) {
-  //   turnRelay(2, 0); 
-  //  } else if (Relay1_State == 1 && Relay2_isAuto == 0){
-  //   turnRelay(2, 1);
-  //  }
-  //  if (Relay3_State == 0 && Relay3_isAuto == 0) {
-  //   turnRelay(3, 0); 
-  //  } else if (Relay3_State == 1 && Relay3_isAuto == 0){
-  //   turnRelay(3, 1);
-  //  }
-  //  if (Relay4_State == 0 && Relay4_isAuto == 0) {
-  //   turnRelay(4, 0); 
-  //  } else if (Relay4_State == 1 && Relay4_isAuto == 0){
-  //   turnRelay(4, 1);
-  //  }
-  //  if (Relay5_State == 0 && Relay5_isAuto == 0) {
-  //   turnRelay(5, 0); 
-  //  } else if (Relay5_State == 1 && Relay5_isAuto == 0){
-  //   turnRelay(5, 1);
-  //  }
-  //  if (Relay6_State == 0 && Relay6_isAuto == 0) {
-  //   turnRelay(6, 0); 
-  //  } else if (Relay6_State == 1 && Relay6_isAuto == 0){
-  //   turnRelay(6, 1);
-  //  }
-
-
   //EEPROM Water Pump Schedule
-  Pump_start_hour = EEPROM.read(21);
-  Pump_start_min = EEPROM.read(22);
-  Pump_every_hours = EEPROM.read(23);
-  Pump_every_mins = EEPROM.read(24);
-  Pump_for = EEPROM.read(25);
-  Pump_times = EEPROM.read(26);
+  Pump_start_hour = EEPROM.read(38);
+  Pump_start_min = EEPROM.read(39);
+  Pump_every_hours = EEPROM.read(40);
+  Pump_every_mins = EEPROM.read(41);
+  Pump_for = EEPROM.read(42);
+  Pump_times = EEPROM.read(43);
 
   int i = 0;
   for(i = 0; i < 16; i++){
-    Pump_hour_array[i] =  EEPROM.read(i+27);
-    Pump_min_array[i] = EEPROM.read(i+43);
-    Pump_isAM_array[i] = EEPROM.read(i+59);
+    Pump_hour_array[i] =  EEPROM.read(i+44);
+    Pump_min_array[i] = EEPROM.read(i+60);
+    Pump_isAM_array[i] = EEPROM.read(i+76);
   }
 
   //EEPROM Light Schedule
-  Light_ON_hour = EEPROM.read(76);
-  Light_ON_min = EEPROM.read(209);
-  Light_OFF_hour = EEPROM.read(77);
-  Light_OFF_min = EEPROM.read(210);
+  Light_ON_hour = EEPROM.read(93);
+  Light_OFF_hour = EEPROM.read(94);
+  
+  Light_ON_min = EEPROM.read(95);
+  Light_OFF_min = EEPROM.read(96);
 
   //EEPROM pH1 Settings
-  pH1Value_Low = eepromReadFloat(78);
-  pH1Value_High = eepromReadFloat(82);
+  pH1Value_Low = eepromReadFloat(113);
+  pH1Value_High = eepromReadFloat(117);
 
   //EEPROM pH2 Settings
-  pH2Value_Low = eepromReadFloat(180);
-  pH2Value_High = eepromReadFloat(184);
+  pH2Value_Low = eepromReadFloat(121);
+  pH2Value_High = eepromReadFloat(125);
 
   //EEPROM Temp Settings
-  TempValue_Low  = eepromReadFloat(86);
-  TempValue_High = eepromReadFloat(90);
-  Heater_ON = eepromReadFloat(94);
-  Heater_OFF =eepromReadFloat(98);
-  AC_ON = eepromReadFloat(102);
-  AC_OFF = eepromReadFloat(106);
+  TempValue_Low  = eepromReadFloat(129);
+  TempValue_High = eepromReadFloat(133);
+  Heater_ON = eepromReadFloat(137);
+  Heater_OFF =eepromReadFloat(141);
+  AC_ON = eepromReadFloat(145);
+  AC_OFF = eepromReadFloat(149);
 
   //EEPROM RH Settings
-  RHValue_Low = eepromReadFloat(110);
-  RHValue_High = eepromReadFloat(114);
-  Humidifier_ON = eepromReadFloat(118);
-  Humidifier_OFF = eepromReadFloat(122);
-  Dehumidifier_ON = eepromReadFloat(126);
-  Dehumidifier_OFF = eepromReadFloat(130);
+  RHValue_Low = eepromReadFloat(153);
+  RHValue_High = eepromReadFloat(157);
+  Humidifier_ON = eepromReadFloat(161);
+  Humidifier_OFF = eepromReadFloat(165);
+  Dehumidifier_ON = eepromReadFloat(169);
+  Dehumidifier_OFF = eepromReadFloat(173);
 
   //EEPROM TDS1 Settings
-  TDS1Value_Low = eepromReadFloat(134);
-  TDS1Value_High = eepromReadFloat(139);
-  NutePump1_ON = eepromReadFloat(144);
-  NutePump1_OFF = eepromReadFloat(149);
-  if (EEPROM.read(154) == 1){
+  TDS1Value_Low = eepromReadFloat(177);
+  TDS1Value_High = eepromReadFloat(181);
+  NutePump1_ON = eepromReadFloat(185);
+  NutePump1_OFF = eepromReadFloat(189);
+  if (EEPROM.read(193) == 1){
     MixPump1_Enabled = true;
   } 
   else {
@@ -393,11 +466,11 @@ void setup()
   }
 
   //EEPROM TDS2 Settings
-  TDS2Value_Low = eepromReadFloat(188);
-  TDS2Value_High = eepromReadFloat(193);
-  NutePump2_ON = eepromReadFloat(198);
-  NutePump2_OFF = eepromReadFloat(203);
-  if (EEPROM.read(208) == 1){
+  TDS2Value_Low = eepromReadFloat(194);
+  TDS2Value_High = eepromReadFloat(198);
+  NutePump2_ON = eepromReadFloat(202);
+  NutePump2_OFF = eepromReadFloat(206);
+  if (EEPROM.read(210) == 1){
     MixPump2_Enabled = true;
   } 
   else {
@@ -406,11 +479,11 @@ void setup()
 
 
   //EEPROM CO2 Settings
-  CO2Value_Low = eepromReadFloat(155);
-  CO2Value_High = eepromReadFloat(159);
-  CO2_ON = eepromReadFloat(163);
-  CO2_OFF = eepromReadFloat(167);
-  if (EEPROM.read(171) == 1){
+  CO2Value_Low = eepromReadFloat(211);
+  CO2Value_High = eepromReadFloat(215);
+  CO2_ON = eepromReadFloat(219);
+  CO2_OFF = eepromReadFloat(223);
+  if (EEPROM.read(227) == 1){
     CO2_Enabled = true;
   } 
   else {
@@ -418,18 +491,73 @@ void setup()
   }
   //
   //EEPROM Light Settings
-  LightValue_Low = eepromReadFloat(172);
-  LightValue_High = eepromReadFloat(176);
+  LightValue_Low = eepromReadFloat(228);
+  LightValue_High = eepromReadFloat(232);
 
+  //added ultrasonic tank sensors
+  //
+  //Water Tank 1
+  Tank1Value_Low = eepromReadFloat(236);
+  Tank1Value_High = eepromReadFloat(240);
+  Tank1Pump_ON = eepromReadFloat(244);
+  Tank1Pump_OFF = eepromReadFloat(248);
+  if (EEPROM.read(252) == 1){
+    Tank1MixPump_Enabled = true;
+  } 
+  else {
+    Tank1MixPump_Enabled = false;
+  }
+  
+  //Water Tank 2
+  Tank2Value_Low = eepromReadFloat(253);
+  Tank2Value_High = eepromReadFloat(257);
+  Tank2Pump_ON = eepromReadFloat(261);
+  Tank2Pump_OFF = eepromReadFloat(265);
+  if (EEPROM.read(269) == 1){
+    Tank2MixPump_Enabled = true;
+  } 
+  else {
+    Tank2MixPump_Enabled = false;
+  }
+  
+  //Water Tank 3
+  Tank3Value_Low = eepromReadFloat(270);
+  Tank3Value_High = eepromReadFloat(274);
+  Tank3Pump_ON = eepromReadFloat(278);
+  Tank3Pump_OFF = eepromReadFloat(282);
+  if (EEPROM.read(286) == 1){
+    Tank3MixPump_Enabled = true;
+  } 
+  else {
+    Tank3MixPump_Enabled = false;
+  }
+  
+  //Water Tank 4
+  Tank4Value_Low = eepromReadFloat(287);
+  Tank4Value_High = eepromReadFloat(291);
+  Tank4Pump_ON = eepromReadFloat(295);
+  Tank4Pump_OFF = eepromReadFloat(299);
+  if (EEPROM.read(303) == 1){
+    Tank4MixPump_Enabled = true;
+  } 
+  else {
+    Tank4MixPump_Enabled = false;
+  }
 
-  //------------------------------------------------------------------------------
+  //Water Tank 4
+  TankTotalValue_Low = eepromReadFloat(304);
+  TankTotalValue_High = eepromReadFloat(308);
+  
+//  ------------------------------------------------------------------------------
 
   //Load default time first, then try the RTC.
   //Set-Time  setTime(hr,min,sec,day,month,yr);
-  setTime(0,0,0,1,1,2015);
+  setTime(0,0,0,1,1,2016);
   setSyncProvider(RTC.get);
-
-  Serial1.begin(115200);
+  
+  Serial.begin(115200);
+  
+  
 }
 
 
@@ -439,9 +567,7 @@ void setup()
  /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 void loop()
-{
-  
-  
+{  
   //Clear the EEPROM and then write defaults.
   for (int i = 0; i < 4096; i++) {
     EEPROM.write(i, 0);

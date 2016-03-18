@@ -1,3 +1,5 @@
+
+
 /*
 /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  /!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!
@@ -71,18 +73,18 @@ void updateSensorValues() {
  /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    !!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-  float TempSum = 0;
-  float TempOffset = 19;
-  j = 0;
-  analogRead(TempPin);  //Get ADC to switch to correct pin
-  delay(15); //Wait for Pin to Change
-
-  while(j<10) {
-    TempSum = TempSum + analogRead(TempPin);
-    j++;
-  }
-
-  TempRawValue = TempSum/((j-1) * 2);
+//  float TempSum = 0;
+//  float TempOffset = 19;
+//  j = 0;
+//  analogRead(TempPin);  //Get ADC to switch to correct pin
+//  delay(15); //Wait for Pin to Change
+//
+//  while(j<10) {
+//    TempSum = TempSum + analogRead(TempPin);
+//    j++;
+//  }
+//
+//  TempRawValue = TempSum/((j-1) * 2);
 
  // TempValue = ((5.00 * TempRawValue * 100.0)/1024.0) + TempOffset;
   
@@ -223,19 +225,25 @@ void updateSensorValues() {
  /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    !!LIGHT SENSOR!!LIGHT SENSOR!!LIGHT SENSOR!!LIGHT SENSOR!!LIGHT SENSOR!!LIGHT SENSOR!!LIGHT SENSOR!!
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-  float LightSum = 0;
-  j = 0;
-  analogRead(LightPin);  //Get ADC to switch to correct pin
-  delay(10); //Wait for Pin to Change
-  
-  while(j<10) {
-    LightSum = LightSum + analogRead(LightPin);
-    j++;
+ //******************************* GY-30 DIGITAL LIGHT SENSOR ***************************
+
+
+  Wire.begin();
+  BH1750_Init(BH1750_address); 
+  delay(200);
+  float valf=0;
+   
+  if(BH1750_Read(BH1750_address)==2){
+    
+    valf=((buff[0]<<8)|buff[1])/1.2;
+    
+    if(valf<0){
+    valf = 30000;
+    }
   }
-
-  LightRawValue = LightSum/10;
-
-  LightValue = ((LightRawValue * 100.0) / 1024.0);
+  
+  LightRawValue = (int)valf,DEC;
+  LightValue = LightRawValue;
   
   if (isnan(LightValue)) {
     LightValue = 0;
@@ -248,8 +256,11 @@ void updateSensorValues() {
   else {
     my_Light_string.println("%"); 
   }
-  
-  
+
+
+ /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!ph!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
   
 
 
@@ -275,7 +286,11 @@ void updateSensorValues() {
     pH2_Status = "HIGH";
   }
   
- 
+
+   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!temp!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+   
 
   //Temp
   if (TempValue < TempValue_Low) {
@@ -287,6 +302,11 @@ void updateSensorValues() {
   else if (TempValue > TempValue_High) {
     Temp_Status = "HIGH";
   }
+
+
+   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!temp!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/  
   
   //Level
   if (WaterValue == 0){
@@ -299,6 +319,11 @@ void updateSensorValues() {
    Level_Status = "Unknown"; 
   }
   
+
+   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!temp!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+
   
   //RH
   if (RHValue < RHValue_Low) {
@@ -307,9 +332,14 @@ void updateSensorValues() {
   else if (RHValue > RHValue_Low && RHValue < RHValue_High) {
     RH_Status = "OK";
   }
-  else if (RHValue < RHValue_High) {
+  else if (RHValue > RHValue_High) {
     RH_Status = "HIGH";
   }
+
+    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!temp!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/ 
+  
   //TDS1
   if (TDS1Value < TDS1Value_Low) {
     TDS1_Status = "LOW";
@@ -317,9 +347,10 @@ void updateSensorValues() {
   else if (TDS1Value > TDS1Value_Low && TDS1Value < TDS1Value_High) {
     TDS1_Status = "OK";
   } 
-  else if (TDS1Value < TDS1Value_High) {
+  else if (TDS1Value > TDS1Value_High) {
     TDS1_Status = "HIGH";
   }
+  
   //TDS2
   if (TDS2Value < TDS2Value_Low) {
     TDS2_Status = "LOW";
@@ -327,9 +358,14 @@ void updateSensorValues() {
   else if (TDS2Value > TDS2Value_Low && TDS2Value < TDS2Value_High) {
     TDS2_Status = "OK";
   } 
-  else if (TDS2Value < TDS2Value_High) {
+  else if (TDS2Value > TDS2Value_High) {
     TDS2_Status = "HIGH";
   }
+
+   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!temp!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+  
   //CO2
   if (CO2Value < CO2Value_Low) {
     CO2_Status = "LOW";
@@ -340,6 +376,11 @@ void updateSensorValues() {
   else if (CO2Value > CO2Value_High){
     CO2_Status = "HIGH";
   }
+
+   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   !!temp!!
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+  
   //Light
   if (LightValue < LightValue_Low) {
     Light_Status = "LOW";
@@ -347,7 +388,7 @@ void updateSensorValues() {
   else if (LightValue > LightValue_Low && LightValue < LightValue_High) {
     Light_Status = "OK";
   } 
-  else if (LightValue < LightValue_High) {
+  else if (LightValue > LightValue_High) {
     Light_Status = "HIGH";
   }
 
