@@ -197,7 +197,7 @@ float CalPoint_4 = 2221;  //Write here your measured value in mV of pH 4
 float CalPoint_7 = 2104;  //Write here your measured value in mV of pH 7
 float CalPoint_10 = 2031; //Write here your measured value in mV of pH 10
 float pHSlope = 0.0178; //slope from sensor calibration. Calculate from values above in the future (NK)
-float pHOffset = -1.889; //slope from sensor calibration. Calculate from values above in the future (NK)
+float pHOffset = 0.0; //slope from sensor calibration. Calculate from values above in the future (NK)
 
 
 //Temp
@@ -556,7 +556,7 @@ void setup()
   setSyncProvider(RTC.get);
   
   Serial.begin(115200);
-  
+  Serial1.begin(115200);
   
 }
 
@@ -569,38 +569,38 @@ void setup()
 void loop()
 {  
   //Clear the EEPROM and then write defaults.
-  for (int i = 0; i < 4096; i++) {
-    EEPROM.write(i, 0);
-  }
-  delay(1000); 
-
-  RestoreDefaults();
-  turnRelay(1,1);
-  delay(1000);
-  turnRelay(1,0);
-  turnRelay(2,1);
-  delay(1000);
-  turnRelay(2,0);
-  turnRelay(3,1);
-  delay(1000);
-  turnRelay(3,0);  
-  turnRelay(4,1);
-  delay(1000);
-  turnRelay(4,0);
-  turnRelay(5,1);
-  delay(1000);
-  turnRelay(5,0);
-  turnRelay(6,1);
-  delay(1000);
-  turnRelay(6,0);
-  turnRelay(7,1);
-  delay(1000);
-  turnRelay(7,0);
-  turnRelay(8,1);
-  delay(1000);
-  turnRelay(8,0);
-  //delay(30000);
-  //delay(30000);
+//  for (int i = 0; i < 4096; i++) {
+//    EEPROM.write(i, 0);
+//  }
+//  delay(1000); 
+//
+//  RestoreDefaults();
+//  turnRelay(1,1);
+//  delay(1000);
+//  turnRelay(1,0);
+//  turnRelay(2,1);
+//  delay(1000);
+//  turnRelay(2,0);
+//  turnRelay(3,1);
+//  delay(1000);
+//  turnRelay(3,0);  
+//  turnRelay(4,1);
+//  delay(1000);
+//  turnRelay(4,0);
+//  turnRelay(5,1);
+//  delay(1000);
+//  turnRelay(5,0);
+//  turnRelay(6,1);
+//  delay(1000);
+//  turnRelay(6,0);
+//  turnRelay(7,1);
+//  delay(1000);
+//  turnRelay(7,0);
+//  turnRelay(8,1);
+//  delay(1000);
+//  turnRelay(8,0);
+//  //delay(30000);
+//  //delay(30000);
   
   
   

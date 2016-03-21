@@ -6,27 +6,27 @@
  */
 void CheckTimers(){
   //Check Light Timer
-  //    Serial.println();
-  //    Serial.print("Light Schedule Timer: ");
-  //    Serial.println();
-  //    Serial.print("hour: ");
-  //    Serial.print(hour());
-  //    Serial.println();
-  //    Serial.print("minute: ");
-  //    Serial.print(minute());
-  //    Serial.println();
-  //    Serial.print("Light_ON_hour: ");
-  //    Serial.print(Light_ON_hour);
-  //    Serial.println();
-  //    Serial.print("Light_ON_min: ");
-  //    Serial.print(Light_ON_min);
-  //    Serial.println();
-  //    Serial.print("Light_OFF_hour: ");
-  //    Serial.print(Light_OFF_hour);
-  //    Serial.println();
-  //    Serial.print("Light_OFF_min: ");
-  //    Serial.print(Light_OFF_min);
-  //    Serial.println();
+  //    Serial1.println();
+  //    Serial1.print("Light Schedule Timer: ");
+  //    Serial1.println();
+  //    Serial1.print("hour: ");
+  //    Serial1.print(hour());
+  //    Serial1.println();
+  //    Serial1.print("minute: ");
+  //    Serial1.print(minute());
+  //    Serial1.println();
+  //    Serial1.print("Light_ON_hour: ");
+  //    Serial1.print(Light_ON_hour);
+  //    Serial1.println();
+  //    Serial1.print("Light_ON_min: ");
+  //    Serial1.print(Light_ON_min);
+  //    Serial1.println();
+  //    Serial1.print("Light_OFF_hour: ");
+  //    Serial1.print(Light_OFF_hour);
+  //    Serial1.println();
+  //    Serial1.print("Light_OFF_min: ");
+  //    Serial1.print(Light_OFF_min);
+  //    Serial1.println();
 
   if (Relay8_isAuto == 1){  
 
@@ -81,9 +81,9 @@ exit_loop_light:;
         EEPROM.write(29,1);
         turnRelay(8, 1);
       }
-      //    Serial.println();
-      //    Serial.println("Turned Light ON");
-      //    Serial.println();
+      //    Serial1.println();
+      //    Serial1.println("Turned Light ON");
+      //    Serial1.println();
     } 
     else {
       if (Relay8_isAuto == 1){
@@ -91,9 +91,9 @@ exit_loop_light:;
         EEPROM.write(29,0);
         turnRelay(8, 0);
       }
-      //    Serial.println();
-      //    Serial.println("Turned Light OFF");
-      //    Serial.println();
+      //    Serial1.println();
+      //    Serial1.println("Turned Light OFF");
+      //    Serial1.println();
     }
 
 
@@ -110,9 +110,9 @@ exit_loop_light:;
 
 
   int i = 0;
-  //  Serial.println();
-  //  Serial.print("Water Pump Timers: ");
-  //  Serial.println();
+  //  Serial1.println();
+  //  Serial1.print("Water Pump Timers: ");
+  //  Serial1.println();
 
   for(i=0;i<Pump_times;i++){
     Pump_hour_on = Pump_hour_array[i];
@@ -121,13 +121,13 @@ exit_loop_light:;
 
     if (Pump_isAM_array[i] == false && Pump_hour_on != 12){
       Pump_hour_on = Pump_hour_on + 12;
-      //      Serial.println("Added 12");
-      //      Serial.println(Pump_hour_on);
+      //      Serial1.println("Added 12");
+      //      Serial1.println(Pump_hour_on);
     }
 
     if (Pump_hour_on == 24){
       Pump_hour_on = 12;
-      //      Serial.println("Change 0 to 12");
+      //      Serial1.println("Change 0 to 12");
     }
 
     Pump_hour_off = Pump_hour_on;
@@ -148,23 +148,23 @@ exit_loop_light:;
       Pump_hour_off = Pump_hour_off - 24; 
     }
 
-    //    Serial.print(i);
-    //    Serial.print(") ");
-    //    Serial.print("Hour: ");
-    //    Serial.print(hour());
-    //    Serial.print("   Minute: ");
-    //    Serial.print(minute());
-    //    Serial.print("   On Time: ");
-    //    Serial.print(Pump_hour_on);
-    //    Serial.print(":");
-    //    Serial.print(Pump_min_on);  
-    //    Serial.print("   Off Time: ");
-    //    Serial.print(Pump_hour_off);
-    //    Serial.print(":");
-    //    Serial.print(Pump_min_off);
-    //    Serial.print("   Is AM:");
-    //    Serial.println(Pump_isAM_array[i]);
-    //    Serial.println(); 
+    //    Serial1.print(i);
+    //    Serial1.print(") ");
+    //    Serial1.print("Hour: ");
+    //    Serial1.print(hour());
+    //    Serial1.print("   Minute: ");
+    //    Serial1.print(minute());
+    //    Serial1.print("   On Time: ");
+    //    Serial1.print(Pump_hour_on);
+    //    Serial1.print(":");
+    //    Serial1.print(Pump_min_on);  
+    //    Serial1.print("   Off Time: ");
+    //    Serial1.print(Pump_hour_off);
+    //    Serial1.print(":");
+    //    Serial1.print(Pump_min_off);
+    //    Serial1.print("   Is AM:");
+    //    Serial1.println(Pump_isAM_array[i]);
+    //    Serial1.println(); 
 
     if (Pump_hour_on == 23 && Pump_hour_off < Pump_hour_on) {
       if (Pump_hour_on == hour() && minute() >= Pump_min_on ) {
@@ -227,8 +227,8 @@ exit_loop_pump:;
 }
 
 void SwitchPump(int TurnPumpOn){
-  //  Serial.print("TurnPumpOn: ");
-  //  Serial.println(TurnPumpOn);
+  //  Serial1.print("TurnPumpOn: ");
+  //  Serial1.println(TurnPumpOn);
   
   //Reset pump activity timer.
   pumpActivityCounter = 10;
@@ -248,9 +248,9 @@ void SwitchPump(int TurnPumpOn){
     }
     
     */
-    //        Serial.println();
-    //        Serial.println("Turned Water Pump On");
-    //        Serial.println();
+    //        Serial1.println();
+    //        Serial1.println("Turned Water Pump On");
+    //        Serial1.println();
   } 
   else if (TurnPumpOn == 0 || TurnPumpOn == 2) {
     if (Relay1_isAuto == 1){
@@ -269,9 +269,9 @@ void SwitchPump(int TurnPumpOn){
     
     */
     
-    //        Serial.println();
-    //        Serial.println("Turned Water Pump Off");
-    //        Serial.println();
+    //        Serial1.println();
+    //        Serial1.println("Turned Water Pump Off");
+    //        Serial1.println();
   }
 }
 

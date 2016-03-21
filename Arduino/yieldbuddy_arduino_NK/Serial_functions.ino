@@ -12,6 +12,22 @@ void sendserialmessages(){
   if (serialcounter == 1 || serialcounter == 4 || serialcounter == 7){
     //SEND TIMESTAMP
     updatelongdate();
+    Serial1.println(); 
+    Serial1.print("Time,");
+    Serial1.print(longdate);
+    Serial1.print(",");
+    Serial1.print(month());
+    Serial1.print(",");
+    Serial1.print(day());
+    Serial1.print(",");
+    Serial1.print(year());
+    Serial1.print(",");
+    Serial1.print(hour());
+    Serial1.print(",");
+    Serial1.print(minute());
+    Serial1.print(",");
+    Serial1.println(second());
+
     Serial.println(); 
     Serial.print("Time,");
     Serial.print(longdate);
@@ -27,169 +43,170 @@ void sendserialmessages(){
     Serial.print(minute());
     Serial.print(",");
     Serial.println(second());
+    
     //SENSOR VALUES
-    Serial.print("Sensors,");
-    Serial.print(pH1Value);
-    Serial.print(",");
-    Serial.print(pH2Value);
-    Serial.print(",");
-    Serial.print(TempValue);
-    Serial.print(",");
-    Serial.print(RHValue);
-    Serial.print(",");
-    Serial.print(TDS1Value);
-    Serial.print(",");
-    Serial.print(TDS2Value);
-    Serial.print(",");
-    Serial.print(CO2Value);
-    Serial.print(",");
-    Serial.print(LightValue);
-    Serial.print(",");
-    Serial.println(WaterValue);       
+    Serial1.print("Sensors,");
+    Serial1.print(pH1Value);
+    Serial1.print(",");
+    Serial1.print(pH2Value);
+    Serial1.print(",");
+    Serial1.print(TempValue);
+    Serial1.print(",");
+    Serial1.print(RHValue);
+    Serial1.print(",");
+    Serial1.print(TDS1Value);
+    Serial1.print(",");
+    Serial1.print(TDS2Value);
+    Serial1.print(",");
+    Serial1.print(CO2Value);
+    Serial1.print(",");
+    Serial1.print(LightValue);
+    Serial1.print(",");
+    Serial1.println(WaterValue);       
     sendRelayMessages(); //<<---- Relays and Relay_isAutoMessages
-    Serial.println();
+    //Serial1.println();
   }
   
   if (serialcounter == 3) { 
 
 
     //LIGHTS
-    Serial.print("Light_Schedule,");
-    Serial.print(Light_ON_hour);
-    Serial.print(",");
-    Serial.print(Light_ON_min);
-    Serial.print(",");
-    Serial.print(Light_OFF_hour);
-    Serial.print(",");
-    Serial.println(Light_OFF_min);
+    Serial1.print("Light_Schedule,");
+    Serial1.print(Light_ON_hour);
+    Serial1.print(",");
+    Serial1.print(Light_ON_min);
+    Serial1.print(",");
+    Serial1.print(Light_OFF_hour);
+    Serial1.print(",");
+    Serial1.println(Light_OFF_min);
     //WATERING
-    Serial.print("Watering_Schedule,");
-    Serial.print(Pump_start_hour);
-    Serial.print(",");
-    Serial.print(Pump_start_min);
-    Serial.print(",");
+    Serial1.print("Watering_Schedule,");
+    Serial1.print(Pump_start_hour);
+    Serial1.print(",");
+    Serial1.print(Pump_start_min);
+    Serial1.print(",");
     if (Pump_start_isAM == true) {
-      Serial.print("1,");
+      Serial1.print("1,");
     } 
     else {
-      Serial.print("0,");
+      Serial1.print("0,");
     }
-    Serial.print(Pump_every_hours);
-    Serial.print(",");
-    Serial.print(Pump_every_mins);
-    Serial.print(",");
-    Serial.print(Pump_for);
-    Serial.print(",");
-    Serial.println(Pump_times);
+    Serial1.print(Pump_every_hours);
+    Serial1.print(",");
+    Serial1.print(Pump_every_mins);
+    Serial1.print(",");
+    Serial1.print(Pump_for);
+    Serial1.print(",");
+    Serial1.println(Pump_times);
   }
   
   if (serialcounter == 4) { 
     //SETPOINTS
     //pH1
-    Serial.print("SetPoint_pH1,");
-    Serial.print(pH1Value_Low);
-    Serial.print(",");
-    Serial.print(pH1Value_High);
-    Serial.print(",");
-    Serial.println(pH1_Status);
+    Serial1.print("SetPoint_pH1,");
+    Serial1.print(pH1Value_Low);
+    Serial1.print(",");
+    Serial1.print(pH1Value_High);
+    Serial1.print(",");
+    Serial1.println(pH1_Status);
   }
   if (serialcounter == 5) { 
 
     //pH2
-    Serial.print("SetPoint_pH2,");
-    Serial.print(pH2Value_Low);
-    Serial.print(",");
-    Serial.print(pH2Value_High);
-    Serial.print(",");
-    Serial.println(pH1_Status);
+    Serial1.print("SetPoint_pH2,");
+    Serial1.print(pH2Value_Low);
+    Serial1.print(",");
+    Serial1.print(pH2Value_High);
+    Serial1.print(",");
+    Serial1.println(pH1_Status);
   }
   if (serialcounter == 6) { 
     //Temp
-    Serial.print("SetPoint_Temp,");
-    Serial.print(TempValue_Low);
-    Serial.print(",");
-    Serial.print(TempValue_High);
-    Serial.print(",");
-    Serial.print(Heater_ON);
-    Serial.print(",");
-    Serial.print(Heater_OFF);
-    Serial.print(",");
-    Serial.print(AC_ON);
-    Serial.print(",");
-    Serial.print(AC_OFF);
-    Serial.print(",");
-    Serial.println(Temp_Status);
+    Serial1.print("SetPoint_Temp,");
+    Serial1.print(TempValue_Low);
+    Serial1.print(",");
+    Serial1.print(TempValue_High);
+    Serial1.print(",");
+    Serial1.print(Heater_ON);
+    Serial1.print(",");
+    Serial1.print(Heater_OFF);
+    Serial1.print(",");
+    Serial1.print(AC_ON);
+    Serial1.print(",");
+    Serial1.print(AC_OFF);
+    Serial1.print(",");
+    Serial1.println(Temp_Status);
   } 
   if (serialcounter == 7) { 
     //RH
-    Serial.print("SetPoint_RH,");
-    Serial.print(RHValue_Low);
-    Serial.print(",");
-    Serial.print(RHValue_High);
-    Serial.print(",");
-    Serial.print(Humidifier_ON);
-    Serial.print(",");
-    Serial.print(Humidifier_OFF);
-    Serial.print(",");
-    Serial.print(Dehumidifier_ON);
-    Serial.print(",");
-    Serial.print(Dehumidifier_OFF);
-    Serial.print(",");        
-    Serial.println(RH_Status);
+    Serial1.print("SetPoint_RH,");
+    Serial1.print(RHValue_Low);
+    Serial1.print(",");
+    Serial1.print(RHValue_High);
+    Serial1.print(",");
+    Serial1.print(Humidifier_ON);
+    Serial1.print(",");
+    Serial1.print(Humidifier_OFF);
+    Serial1.print(",");
+    Serial1.print(Dehumidifier_ON);
+    Serial1.print(",");
+    Serial1.print(Dehumidifier_OFF);
+    Serial1.print(",");        
+    Serial1.println(RH_Status);
   }
   if (serialcounter == 8) { 
     //TDS1
-    Serial.print("SetPoint_TDS1,");
-    Serial.print(TDS1Value_Low);
-    Serial.print(",");
-    Serial.print(TDS1Value_High);
-    Serial.print(",");
-    Serial.print(NutePump1_ON);
-    Serial.print(",");
-    Serial.print(NutePump1_OFF);
-    Serial.print(",");
-    Serial.print(MixPump1_Enabled);
-    Serial.print(",");
-    Serial.println(TDS1_Status);
+    Serial1.print("SetPoint_TDS1,");
+    Serial1.print(TDS1Value_Low);
+    Serial1.print(",");
+    Serial1.print(TDS1Value_High);
+    Serial1.print(",");
+    Serial1.print(NutePump1_ON);
+    Serial1.print(",");
+    Serial1.print(NutePump1_OFF);
+    Serial1.print(",");
+    Serial1.print(MixPump1_Enabled);
+    Serial1.print(",");
+    Serial1.println(TDS1_Status);
   }
   if (serialcounter == 9) { 
     //TDS2
-    Serial.print("SetPoint_TDS2,");
-    Serial.print(TDS2Value_Low);
-    Serial.print(",");
-    Serial.print(TDS2Value_High);
-    Serial.print(",");
-    Serial.print(NutePump2_ON);
-    Serial.print(",");
-    Serial.print(NutePump2_OFF);
-    Serial.print(",");
-    Serial.print(MixPump2_Enabled);
-    Serial.print(",");
-    Serial.println(TDS2_Status);
+    Serial1.print("SetPoint_TDS2,");
+    Serial1.print(TDS2Value_Low);
+    Serial1.print(",");
+    Serial1.print(TDS2Value_High);
+    Serial1.print(",");
+    Serial1.print(NutePump2_ON);
+    Serial1.print(",");
+    Serial1.print(NutePump2_OFF);
+    Serial1.print(",");
+    Serial1.print(MixPump2_Enabled);
+    Serial1.print(",");
+    Serial1.println(TDS2_Status);
   }
   if (serialcounter == 10) { 
     //CO2
-    Serial.print("SetPoint_CO2,");
-    Serial.print(CO2Value_Low);
-    Serial.print(",");
-    Serial.print(CO2Value_High);
-    Serial.print(",");
-    Serial.print(CO2_ON);
-    Serial.print(",");
-    Serial.print(CO2_OFF);
-    Serial.print(",");
-    Serial.print(CO2_Enabled);
-    Serial.print(",");
-    Serial.println(CO2_Status);
+    Serial1.print("SetPoint_CO2,");
+    Serial1.print(CO2Value_Low);
+    Serial1.print(",");
+    Serial1.print(CO2Value_High);
+    Serial1.print(",");
+    Serial1.print(CO2_ON);
+    Serial1.print(",");
+    Serial1.print(CO2_OFF);
+    Serial1.print(",");
+    Serial1.print(CO2_Enabled);
+    Serial1.print(",");
+    Serial1.println(CO2_Status);
   }
   if (serialcounter == 11) { 
     //Light
-    Serial.print("SetPoint_Light,");
-    Serial.print(LightValue_Low);
-    Serial.print(",");
-    Serial.print(LightValue_High);
-    Serial.print(",");
-    Serial.println(Light_Status); 
+    Serial1.print("SetPoint_Light,");
+    Serial1.print(LightValue_Low);
+    Serial1.print(",");
+    Serial1.print(LightValue_High);
+    Serial1.print(",");
+    Serial1.println(Light_Status); 
 
     serialcounter = 0;
   }
@@ -203,15 +220,15 @@ void sendserialmessages(){
  /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 void serialEvent() {
-  while (Serial.available() > 0) {
+  while (Serial1.available() > 0) {
     // get the new byte:
-    char inChar = (char)Serial.read(); 
+    char inChar = (char)Serial1.read(); 
 
     // if the incoming character is a newline, set a flag
     // so the main loop can do something about it:
     if (inChar == '\n') {
       stringComplete = true;
-      Serial.println("Recieved String! '" + Serial_inString + "'");
+      Serial1.println("Recieved String! '" + Serial_inString + "'");
 
       if (Serial_inString == "Relay1 on" && Relay1_isAuto == 0) {
         Relay1_State = 1;
@@ -413,7 +430,7 @@ void serialEvent() {
         //      Serial.println("YESSS");
         char datechar[Serial_inString.length()+1];
         Serial_inString.toCharArray(datechar, Serial_inString.length()+1);
-        //      Serial.print("Char: ");
+        //      Serial1.print("Char: ");
         //      Serial.println(datechar);
         int date[10];
         //      Serial.println(Serial_inString);
@@ -531,11 +548,11 @@ void serialEvent() {
 
 
       if(Serial_inString.indexOf("setwateringschedule") >=0) {
-        Serial.println("setwaterschedule");
+        Serial1.println("setwaterschedule");
         char waterschedulechar[Serial_inString.length()+1];
         Serial_inString.toCharArray(waterschedulechar, Serial_inString.length()+1);
-        Serial.print("Char: ");
-        Serial.println(waterschedulechar);
+        Serial1.print("Char: ");
+        Serial1.println(waterschedulechar);
         int date[10];
         //        Serial.println(Serial_inString);
         //        Serial.print("Size: ");
@@ -1045,79 +1062,79 @@ void serialEvent() {
 
 void sendRelayMessages() {
   //RELAYS
-    Serial.print("Relays,");
+    Serial1.print("Relays,");
     if (digitalRead(Relay1_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay1_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-    Serial.print(",");
+    Serial1.print(",");
     if (digitalRead(Relay2_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay2_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-    Serial.print(",");
+    Serial1.print(",");
     if (digitalRead(Relay3_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay3_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-    Serial.print(",");
+    Serial1.print(",");
     if (digitalRead(Relay4_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay4_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-    Serial.print(",");
+    Serial1.print(",");
     if (digitalRead(Relay5_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay5_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-    Serial.print(",");
+    Serial1.print(",");
     if (digitalRead(Relay6_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay6_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-    Serial.print(",");
+    Serial1.print(",");
     if (digitalRead(Relay7_Pin) == LOW){
-      Serial.print(1);
+      Serial1.print(1);
     } 
     else if (digitalRead(Relay7_Pin) == HIGH) {
-      Serial.print(0);
+      Serial1.print(0);
     }
-   Serial.print(",");   //This Relay is opposite
+   Serial1.print(",");   //This Relay is opposite
     if (digitalRead(Relay8_Pin) == LOW){
-      Serial.println(1);
+      Serial1.println(1);
     } 
     else if (digitalRead(Relay8_Pin) == HIGH) {
-      Serial.println(0);
+      Serial1.println(0);
     }
 
 
     //Relay_isAuto Values (Modes)
-    Serial.print("Relay_isAuto,");
-    Serial.print(Relay1_isAuto);
-    Serial.print(",");
-    Serial.print(Relay2_isAuto);
-    Serial.print(",");
-    Serial.print(Relay3_isAuto);
-    Serial.print(",");
-    Serial.print(Relay4_isAuto);
-    Serial.print(",");
-    Serial.print(Relay5_isAuto);
-    Serial.print(",");
-    Serial.print(Relay6_isAuto);  
-    Serial.print(",");
-    Serial.print(Relay7_isAuto);
-    Serial.print(",");
-    Serial.println(Relay8_isAuto);
+    Serial1.print("Relay_isAuto,");
+    Serial1.print(Relay1_isAuto);
+    Serial1.print(",");
+    Serial1.print(Relay2_isAuto);
+    Serial1.print(",");
+    Serial1.print(Relay3_isAuto);
+    Serial1.print(",");
+    Serial1.print(Relay4_isAuto);
+    Serial1.print(",");
+    Serial1.print(Relay5_isAuto);
+    Serial1.print(",");
+    Serial1.print(Relay6_isAuto);  
+    Serial1.print(",");
+    Serial1.print(Relay7_isAuto);
+    Serial1.print(",");
+    Serial1.println(Relay8_isAuto);
 }
