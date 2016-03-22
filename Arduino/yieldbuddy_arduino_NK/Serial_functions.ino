@@ -26,24 +26,7 @@ void sendserialmessages(){
     Serial1.print(",");
     Serial1.print(minute());
     Serial1.print(",");
-    Serial1.println(second());
-
-    Serial.println(); 
-    Serial.print("Time,");
-    Serial.print(longdate);
-    Serial.print(",");
-    Serial.print(month());
-    Serial.print(",");
-    Serial.print(day());
-    Serial.print(",");
-    Serial.print(year());
-    Serial.print(",");
-    Serial.print(hour());
-    Serial.print(",");
-    Serial.print(minute());
-    Serial.print(",");
-    Serial.println(second());
-    
+    Serial1.println(second());  
     //SENSOR VALUES
     Serial1.print("Sensors,");
     Serial1.print(pH1Value);
@@ -109,6 +92,7 @@ void sendserialmessages(){
     Serial1.print(pH1Value_High);
     Serial1.print(",");
     Serial1.println(pH1_Status);
+    sendRelayMessages(); //<<---- Relays and Relay_isAutoMessages
   }
   if (serialcounter == 5) { 
 
@@ -1118,7 +1102,6 @@ void sendRelayMessages() {
     else if (digitalRead(Relay8_Pin) == HIGH) {
       Serial1.println(0);
     }
-
 
     //Relay_isAuto Values (Modes)
     Serial1.print("Relay_isAuto,");

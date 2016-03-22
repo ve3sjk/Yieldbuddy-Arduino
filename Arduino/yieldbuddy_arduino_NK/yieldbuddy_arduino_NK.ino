@@ -140,6 +140,14 @@ float Tank3Value = 0;
 float Tank4Value = 0;
 float TankTotalValue = 0;
 
+// variables used in read_water_sensor function
+long duration, distance; // Duration used to calculate distance
+float water_height = 0; //water height in inches
+float filledvolume = 0; // amount of tank volume filled with water
+float water_litres = 0; // amount of tank volume filled in litres
+float echo = 0; // returned value in litres 
+
+
 //Tank 1
 String Tank1_Status = "OK";
 float Tank1Value_Low = 50.00;

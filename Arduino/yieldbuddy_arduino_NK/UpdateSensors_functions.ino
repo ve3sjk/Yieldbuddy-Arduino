@@ -5,6 +5,54 @@
  /!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!UPDATE SENSOR VALUES!!
  /!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
+ 
+
+
+
+
+
+float read_water_sensor (int tpin, int epin) {
+  
+
+  pinMode(tpin, OUTPUT);
+  pinMode(epin, INPUT);
+  
+  //send trigger pulse
+  digitalWrite(tpin, LOW); 
+  delayMicroseconds(2);  
+  digitalWrite(tpin, HIGH);
+  delayMicroseconds(10); 
+  digitalWrite(tpin, LOW);
+  
+  //measure time back
+  duration = pulseIn(epin, HIGH);
+
+  //Calculate the distance (in inches) based on the speed of sound.
+  distance = duration/148;
+
+  // cap max distance - depth to bottom of water vessel 
+  if (distance > 33){ 
+    distance = 33;
+  }
+  
+  else {
+  
+  // convert air space to water height
+  water_height = 33-distance;
+  // calculate volume of water in tank
+  filledvolume = 132.25*3.14141414*(water_height);
+  // convert to litres equivalent
+  water_litres = filledvolume*0.01638706;
+  // set return value to requirements
+  echo = water_litres;
+
+  return echo;
+  
+ }
+}
+
+
+
 
 //READ ALL SENSOR VALUES AND CONVERT FOR LCD DISPLAY
 void updateSensorValues() {
@@ -17,6 +65,7 @@ void updateSensorValues() {
  
   
   /*PH1------------------------------------------------*/
+  
   float pH1Sum = 0;
   int j = 0;
   analogRead(pH1Pin);  //Get ADC to switch to correct pin
@@ -44,6 +93,7 @@ void updateSensorValues() {
   
   
   /*PH2------------------------------------------------*/
+  
   float pH2Sum = 0;
   j = 0;
   analogRead(pH2Pin);  //Get ADC to switch to correct pin
@@ -73,6 +123,7 @@ void updateSensorValues() {
  /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    !!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!TEMPERATURE SENSOR!!
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+   
 //  float TempSum = 0;
 //  float TempOffset = 19;
 //  j = 0;
@@ -100,18 +151,19 @@ void updateSensorValues() {
    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    !!WATER LEVEL SENSOR! WATER LEVEL SENSOR! WATER LEVEL SENSOR! WATER LEVEL SENSOR! WATER LEVEL SENSOR! 
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-  float WaterSum = 0;
-  j = 0;
-  analogRead(WaterPin);  //Get ADC to switch to correct pin
-  delay(15); //Wait for Pin to Change
-
-  while(j<10) {
-    WaterSum = WaterSum + analogRead(WaterPin);
-    j++;
-  }
-
-  WaterRawValue = WaterSum/((j-1) * 2);
-  WaterValue = ((5.00 * WaterRawValue * 100.0)/1024.0);
+//  float WaterSum = 0;
+//  j = 0;
+//  analogRead(WaterPin);  //Get ADC to switch to correct pin
+//  delay(15); //Wait for Pin to Change
+//
+//  while(j<10) {
+//    WaterSum = WaterSum + analogRead(WaterPin);
+//    j++;
+//  }
+//
+//  WaterRawValue = WaterSum/((j-1) * 2);
+//  WaterValue = ((5.00 * WaterRawValue * 100.0)/1024.0);
+    WaterValue = (read_water_sensor(Tank1TrigPin, Tank1EchoPin));
   if(isnan(WaterValue)){
     LevelFull = 2;        
   }
@@ -162,9 +214,9 @@ void updateSensorValues() {
   }
 
   TDS1RawValue = TDS1Sum/((j-1) * 2);
-
-  TDS1Value = ((TDS1RawValue * 100.0)/1024.0);
-  
+ // ******for testing purposes*****************
+ // TDS1Value = ((TDS1RawValue * 100.0)/1024.0);
+  TDS1Value = WaterValue;
   if(isnan(TDS1Value)){
     TDS1Value = 0;        
   }
